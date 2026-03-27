@@ -3,7 +3,7 @@
 // Affiche tous les produits avec filtres par catégorie
 // ============================================================
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useMenu } from '../hooks/useMenu'
 import { useCart } from '../context/CartContext'
@@ -12,6 +12,11 @@ import CategoryFilter from '../components/menu/CategoryFilter'
 import ProductModal from '../components/menu/ProductModal'
 import { SkeletonGrille } from '../components/ui/SkeletonLoader'
 import { formaterPrix } from '../lib/whatsapp'
+import { getInfosRestaurant } from '../lib/supabase'
+
+function getFavorisIds() {
+  try { return JSON.parse(localStorage.getItem('bigman_favoris') || '[]') } catch { return [] }
+}
 
 export default function Menu() {
   const {
@@ -26,14 +31,23 @@ export default function Menu() {
   const { totalPanier, nombreArticles } = useCart()
   const [produitSelectionne, setProduitSelectionne] = useState(null)
   const [recherche, setRecherche] = useState('')
+  const [filtreFavoris, setFiltreFavoris] = useState(false)
+  const [favorisIds, setFavorisIds] = useState(getFavorisIds)
+  const [infosResto, setInfosResto] = useState({ ouvert: true, eta: '30-45 min' })
 
-  // Filtre supplémentaire par recherche textuelle
-  const produitsFiltres = recherche
-    ? produits.filter(p =>
-        p.nom.toLowerCase().includes(recherche.toLowerCase()) ||
-        p.description.toLowerCase().includes(recherche.toLowerCase())
-      )
-    : produits
+  useEffect(() => {
+    getInfosRestaurant().then(setInfosResto).catch(() => {})
+    const handler = () => setFavorisIds(getFavorisIds())
+    window.addEventListener('bigman_favoris_change', handler)
+    return () => window.removeEventListener('bigman_favoris_change', handler)
+  }, [])
+
+  const produitsFiltres = produits.filter(p => {
+    if (filtreFavoris && !favorisIds.includes(p.id)) return false
+    if (recherche && !p.nom.toLowerCase().includes(recherche.toLowerCase()) &&
+        !p.description?.toLowerCase().includes(recherche.toLowerCase())) return false
+    return true
+  })
 
   return (
     <div className="min-h-screen pb-28">
@@ -55,14 +69,32 @@ export default function Menu() {
           />
         </div>
 
-        {/* Filtres de catégories */}
-        <CategoryFilter
-          categorieActive={categorieActive}
-          onChange={(cat) => {
-            setCategorieActive(cat)
-            setRecherche('') // Réinitialise la recherche au changement de catégorie
-          }}
-        />
+        {/* Banner restaurant fermé */}
+      {!infosResto.ouvert && (
+        <div className="bg-red-900/40 border border-red-700/50 rounded-xl p-3 mb-4 text-center">
+          <p className="text-red-300 font-semibold text-sm">🔴 Restaurant fermé — Pas de commandes pour l'instant</p>
+        </div>
+      )}
+
+      {/* Filtres de catégories + Favoris */}
+        <div className="flex items-center gap-2 mb-1">
+          <CategoryFilter
+            categorieActive={categorieActive}
+            onChange={(cat) => {
+              setCategorieActive(cat)
+              setRecherche('')
+              setFiltreFavoris(false)
+            }}
+          />
+          <button
+            onClick={() => setFiltreFavoris(v => !v)}
+            className={`flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold transition-all border ${
+              filtreFavoris ? 'bg-rouge border-rouge text-white' : 'bg-noir border-gray-700 text-gray-400 hover:border-gray-500'
+            }`}
+          >
+            ❤️ {favorisIds.length > 0 ? favorisIds.length : ''}
+          </button>
+        </div>
       </div>
 
       {/* ---- Contenu principal ---- */}
@@ -104,12 +136,13 @@ export default function Menu() {
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-4">
-            {produitsFiltres.map((produit) => (
+          <div key={categorieActive} className="grid grid-cols-2 gap-4">
+            {produitsFiltres.map((produit, index) => (
               <MenuCard
                 key={produit.id}
                 produit={produit}
                 onOuvrir={setProduitSelectionne}
+                index={index}
               />
             ))}
           </div>

@@ -5,10 +5,7 @@
 
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-
-// Mot de passe admin (en production, utiliser Supabase Auth)
-// Pour l'instant, mot de passe simple stocké ici — à changer !
-const MOT_DE_PASSE_ADMIN = 'bigman2024'
+import { getParametre } from '../lib/supabase'
 
 export default function AdminLogin() {
   const navigate = useNavigate()
@@ -16,23 +13,34 @@ export default function AdminLogin() {
   const [erreur, setErreur] = useState('')
   const [chargement, setChargement] = useState(false)
 
-  function handleConnexion(e) {
+  async function handleConnexion(e) {
     e.preventDefault()
     setChargement(true)
     setErreur('')
 
-    // Simule une vérification async (pour l'animation de chargement)
-    setTimeout(() => {
-      if (motDePasse === MOT_DE_PASSE_ADMIN) {
-        // Marque l'admin comme connecté dans sessionStorage
-        // sessionStorage est effacé à la fermeture du navigateur (sécurité)
+    try {
+      // Vérifie d'abord si un mot de passe personnalisé a été défini dans la DB
+      const mdpOverride = await getParametre('admin_password_override')
+      const mdpRef = mdpOverride || import.meta.env.VITE_ADMIN_PASSWORD || 'bigman2024'
+
+      if (motDePasse === mdpRef) {
         sessionStorage.setItem('bigman_admin', 'true')
         navigate('/admin/dashboard')
       } else {
         setErreur('Mot de passe incorrect')
       }
+    } catch {
+      // Fallback si Supabase indisponible
+      const mdpRef = import.meta.env.VITE_ADMIN_PASSWORD || 'bigman2024'
+      if (motDePasse === mdpRef) {
+        sessionStorage.setItem('bigman_admin', 'true')
+        navigate('/admin/dashboard')
+      } else {
+        setErreur('Mot de passe incorrect')
+      }
+    } finally {
       setChargement(false)
-    }, 500)
+    }
   }
 
   return (

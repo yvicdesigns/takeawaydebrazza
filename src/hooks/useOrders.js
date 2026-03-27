@@ -13,23 +13,29 @@ export function useOrders() {
   const [erreur, setErreur] = useState(null)
 
   // Crée une nouvelle commande
-  async function passerCommande({ panier, infosClient, modeLivraison, modePaiement, total }) {
+  async function passerCommande({ panier, infosClient, modeLivraison, modePaiement, total, frais_livraison, solde_utilise, reduction, code_promo, eta, screenshotPaiementUrl, statutPaiement }) {
     setChargement(true)
     setErreur(null)
 
     try {
-      // Prépare l'objet commande pour Supabase
       const nouvelleCommande = {
-        nom_client: infosClient.nom,
-        telephone: infosClient.telephone,
-        adresse: modeLivraison === 'livraison' ? infosClient.adresse : 'Retrait sur place',
-        mode_livraison: modeLivraison,
-        mode_paiement: modePaiement,
-        notes: infosClient.notes || null,
-        statut: 'en_attente',
-        total, // Total avec frais de livraison inclus, calculé dans Checkout
-        produits: panier, // Stocké en JSON dans Supabase
-        created_at: new Date().toISOString(),
+        nom_client:                infosClient.nom,
+        telephone:                 infosClient.telephone,
+        adresse:                   modeLivraison === 'livraison' ? infosClient.adresse : 'Retrait sur place',
+        mode_livraison:            modeLivraison,
+        mode_paiement:             modePaiement,
+        notes:                     infosClient.notes || null,
+        statut:                    'en_attente',
+        screenshot_paiement_url:   screenshotPaiementUrl || null,
+        statut_paiement:           statutPaiement || 'non_concerne',
+        total,
+        frais_livraison:           frais_livraison || 0,
+        solde_utilise:             solde_utilise || 0,
+        reduction:                 reduction || 0,
+        code_promo:                code_promo || null,
+        eta:                       eta || null,
+        produits:                  panier,
+        created_at:                new Date().toISOString(),
       }
 
       // Tente de sauvegarder dans Supabase

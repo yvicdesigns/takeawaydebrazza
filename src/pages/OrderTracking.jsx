@@ -5,9 +5,101 @@
 
 import { useState, useEffect } from 'react'
 import { useParams, useLocation, Link } from 'react-router-dom'
-import { supabase, ecouterCommande } from '../lib/supabase'
+import { supabase, ecouterCommande, soumettreAvis, aDejaNote } from '../lib/supabase'
 import OrderStatus from '../components/order/OrderStatus'
 import { formaterPrix } from '../lib/whatsapp'
+
+// ---- Composant section notation ----
+function SectionAvis({ commande }) {
+  const [dejaNote, setDejaNote] = useState(null) // null = chargement
+  const [notes, setNotes]       = useState({})   // { nomProduit: 1-5 }
+  const [commentaire, setCommentaire] = useState('')
+  const [envoye, setEnvoye]     = useState(false)
+  const [envoi, setEnvoi]       = useState(false)
+
+  const produits = Array.isArray(commande.produits) ? commande.produits : []
+
+  useEffect(() => {
+    aDejaNote(commande.id).then(setDejaNote)
+  }, [commande.id])
+
+  async function soumettre() {
+    if (envoi) return
+    const notesProduits = produits.map(p => ({
+      produit_id: String(p.id || p.nom),
+      produit_nom: p.nom,
+      note: notes[p.nom] || 0,
+    })).filter(n => n.note > 0)
+
+    setEnvoi(true)
+    await soumettreAvis({
+      commande_id: String(commande.id),
+      telephone: commande.telephone || '',
+      nom_client: commande.nom_client || '',
+      notes_produits: notesProduits,
+      commentaire,
+    })
+    setEnvoye(true)
+  }
+
+  if (dejaNote === null) return null // encore en chargement
+
+  if (dejaNote || envoye) {
+    return (
+      <div className="bg-green-900/20 border border-green-800 rounded-2xl p-5 mb-6 text-center">
+        <span className="text-3xl">⭐</span>
+        <p className="text-green-400 font-bold mt-2">Merci pour votre avis !</p>
+        <p className="text-gray-500 text-xs mt-1">Votre retour nous aide à améliorer nos produits</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="bg-noir-clair rounded-2xl p-5 mb-6">
+      <h3 className="font-bold text-white mb-4">⭐ Donnez votre avis</h3>
+
+      <div className="space-y-4">
+        {produits.map(p => (
+          <div key={p.nom}>
+            <p className="text-gray-300 text-sm mb-2">{p.nom}</p>
+            <div className="flex gap-2">
+              {[1,2,3,4,5].map(n => (
+                <button
+                  key={n}
+                  onClick={() => setNotes(prev => ({ ...prev, [p.nom]: n }))}
+                  className={`text-2xl transition-transform active:scale-90 ${
+                    (notes[p.nom] || 0) >= n ? 'opacity-100' : 'opacity-30'
+                  }`}
+                >
+                  ⭐
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+
+        <div>
+          <label className="text-gray-400 text-xs mb-1 block">Commentaire (optionnel)</label>
+          <textarea
+            value={commentaire}
+            onChange={e => setCommentaire(e.target.value)}
+            rows={2}
+            placeholder="Dites-nous ce que vous avez pensé..."
+            className="w-full bg-[#1a1a1a] border border-gray-700 text-white text-sm rounded-xl px-3 py-2 resize-none focus:outline-none focus:border-rouge"
+          />
+        </div>
+
+        <button
+          onClick={soumettre}
+          disabled={envoi || Object.keys(notes).length === 0}
+          className="w-full bg-rouge hover:bg-red-700 disabled:opacity-40 text-white font-bold py-3 rounded-xl transition-colors"
+        >
+          {envoi ? 'Envoi...' : 'Envoyer mon avis'}
+        </button>
+      </div>
+    </div>
+  )
+}
 
 // Traduit les identifiants de statut en texte lisible
 const LABELS_STATUT = {
@@ -135,6 +227,7 @@ export default function OrderTracking() {
           <OrderStatus
             statut={commande.statut || 'en_attente'}
             commandeId={commande.id}
+            modeLivraison={commande.mode_livraison || 'livraison'}
           />
         </div>
 
@@ -177,6 +270,9 @@ export default function OrderTracking() {
             </div>
           </div>
         </div>
+
+        {/* ---- Notation après livraison ---- */}
+        {estLivre && <SectionAvis commande={commande} />}
 
         {/* ---- Actions ---- */}
         <div className="space-y-3">

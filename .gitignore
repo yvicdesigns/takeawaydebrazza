@@ -25,3 +25,4 @@ npm-debug.log*
 # Capacitor (généré automatiquement)
 android/
 ios/
+.vercel

@@ -5,12 +5,12 @@
 
 import { Link, useLocation } from 'react-router-dom'
 import { useCart } from '../../context/CartContext'
+import { useTheme } from '../../context/ThemeContext'
 
 export default function Navbar() {
-  // useLocation retourne l'URL actuelle (pour savoir sur quelle page on est)
   const location = useLocation()
-  // Récupère le nombre d'articles dans le panier
   const { nombreArticles } = useCart()
+  const { isLight, basculerTheme } = useTheme()
 
   // On n'affiche pas la navbar sur les pages admin
   if (location.pathname.startsWith('/admin')) return null
@@ -31,6 +31,16 @@ export default function Navbar() {
 
         {/* Actions à droite */}
         <div className="flex items-center gap-3">
+          {/* Bouton thème ☀️ / 🌙 */}
+          <button
+            onClick={basculerTheme}
+            className="w-10 h-10 flex items-center justify-center rounded-xl bg-noir-clair hover:bg-gray-700 transition-colors no-tap-highlight text-lg"
+            aria-label={isLight ? 'Passer en mode sombre' : 'Passer en mode clair'}
+            title={isLight ? 'Mode sombre' : 'Mode clair'}
+          >
+            {isLight ? '🌙' : '☀️'}
+          </button>
+
           {/* Bouton panier avec badge */}
           <Link
             to="/panier"

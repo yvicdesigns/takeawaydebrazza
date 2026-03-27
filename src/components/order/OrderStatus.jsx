@@ -3,8 +3,7 @@
 // Affiche le statut d'une commande avec une timeline visuelle
 // ============================================================
 
-// Définition des étapes et de leur ordre
-const ETAPES = [
+const ETAPES_LIVRAISON = [
   {
     cle: 'en_attente',
     label: 'Commande reçue',
@@ -31,6 +30,33 @@ const ETAPES = [
   },
 ]
 
+const ETAPES_RETRAIT = [
+  {
+    cle: 'en_attente',
+    label: 'Commande reçue',
+    description: 'Votre commande a bien été enregistrée',
+    emoji: '📋',
+  },
+  {
+    cle: 'en_preparation',
+    label: 'En préparation',
+    description: 'Notre équipe prépare votre commande',
+    emoji: '👨‍🍳',
+  },
+  {
+    cle: 'en_livraison',
+    label: 'Prêt à retirer',
+    description: 'Votre commande vous attend au comptoir',
+    emoji: '🏪',
+  },
+  {
+    cle: 'livre',
+    label: 'Récupéré !',
+    description: 'Commande récupérée. Bon appétit !',
+    emoji: '✅',
+  },
+]
+
 // Styles selon le statut de chaque étape
 const STYLES_ETAPE = {
   complete: {
@@ -50,7 +76,9 @@ const STYLES_ETAPE = {
   },
 }
 
-export default function OrderStatus({ statut, commandeId }) {
+export default function OrderStatus({ statut, commandeId, modeLivraison = 'livraison' }) {
+  const ETAPES = modeLivraison === 'retrait' ? ETAPES_RETRAIT : ETAPES_LIVRAISON
+
   // Trouve l'index de l'étape actuelle
   const indexActuel = ETAPES.findIndex(e => e.cle === statut)
 

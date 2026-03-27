@@ -2,30 +2,54 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <!-- Viewport mobile-first : optimisé pour les petits écrans Android -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="#E63946" />
-    <meta name="description" content="Big Man Fast-Food - Commandez vos burgers à Brazzaville" />
+    <meta name="description" content="Big Man Fast Food — Commandez les meilleurs burgers de Brazzaville. Livraison rapide, paiement Mobile Money, MTN MoMo & Airtel Money." />
+    <meta name="keywords" content="burger, fast food, Brazzaville, Congo, livraison, Big Man, commande en ligne" />
+    <meta name="author" content="Big Man Fast Food" />
+    <meta name="robots" content="index, follow" />
 
-    <!-- PWA : permet l'installation sur Android comme une app -->
+    <!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Big Man Fast Food — Brazzaville" />
+    <meta property="og:description" content="Commandez les meilleurs burgers de Brazzaville. Livraison rapide à domicile ou retrait sur place." />
+    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:url" content="https://bigman-app.vercel.app" />
+    <meta property="og:site_name" content="Big Man Fast Food" />
+    <meta property="og:locale" content="fr_CG" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Big Man Fast Food — Brazzaville" />
+    <meta name="twitter:description" content="Les meilleurs burgers de Brazzaville. Commandez en ligne !" />
+    <meta name="twitter:image" content="/og-image.png" />
+
+    <!-- PWA -->
     <link rel="manifest" href="/manifest.json" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Big Man" />
+    <meta name="mobile-web-app-capable" content="yes" />
 
-    <!-- Préchargement des polices pour accélérer l'affichage -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-    <title>Big Man - Fast Food Brazzaville</title>
+    <title>Big Man — Fast Food Brazzaville 🍔</title>
   </head>
   <body>
-    <!-- Point d'entrée de l'application React -->
     <div id="root"></div>
-
-    <!-- Le script principal de l'application -->
     <script type="module" src="/src/main.jsx"></script>
+    <!-- Service Worker -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(() => {})
+        })
+      }
+    </script>
   </body>
 </html>

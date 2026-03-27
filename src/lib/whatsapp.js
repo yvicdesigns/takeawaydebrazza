@@ -74,9 +74,7 @@ export function calculerTotal(panier) {
 }
 
 // Calcule les frais de livraison (logique simple, à adapter)
-export function calculerFraisLivraison(modeLivraison, adresse = '') {
+export function calculerFraisLivraison(modeLivraison, adresse = '', fraisConfig = 500) {
   if (modeLivraison === 'retrait') return 0
-
-  // Frais fixes pour l'instant — peut être rendu dynamique plus tard
-  return 500 // 500 FCFA de livraison
+  return fraisConfig
 }

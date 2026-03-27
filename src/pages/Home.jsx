@@ -7,8 +7,10 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useMenu } from '../hooks/useMenu'
 import { useCart } from '../context/CartContext'
+import { useTheme } from '../context/ThemeContext'
 import MenuCard from '../components/menu/MenuCard'
 import ProductModal from '../components/menu/ProductModal'
+import PromoCarousel from '../components/home/PromoCarousel'
 import { SkeletonCarte } from '../components/ui/SkeletonLoader'
 import { formaterPrix } from '../lib/whatsapp'
 
@@ -16,6 +18,7 @@ export default function Home() {
   // Récupère les données du menu
   const { produitsPopulaires, chargement } = useMenu()
   const { totalPanier, nombreArticles } = useCart()
+  const { isLight } = useTheme()
 
   // État pour la modale de détail produit
   const [produitSelectionne, setProduitSelectionne] = useState(null)
@@ -33,22 +36,28 @@ export default function Home() {
             className="w-full h-full object-cover"
             loading="eager" // Charge immédiatement car visible au démarrage
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-noir/70 via-noir/60 to-noir" />
+          <div className={`absolute inset-0 ${
+            isLight
+              ? 'bg-gradient-to-b from-black/40 via-black/20 to-[#FFF9F0]'
+              : 'bg-gradient-to-b from-noir/70 via-noir/60 to-noir'
+          }`} />
         </div>
 
         {/* Contenu du hero */}
         <div className="relative z-10 px-4 pt-8 pb-12 max-w-md mx-auto">
           {/* Badge localisation */}
-          <div className="inline-flex items-center gap-1.5 bg-noir/60 backdrop-blur-sm border border-gray-700 rounded-full px-3 py-1.5 mb-6">
+          <div className={`inline-flex items-center gap-1.5 backdrop-blur-sm border rounded-full px-3 py-1.5 mb-6 ${
+            isLight ? 'bg-white/70 border-gray-300' : 'bg-noir/60 border-gray-700'
+          }`}>
             <span className="text-rouge text-xs">📍</span>
-            <span className="text-gray-300 text-xs">Brazzaville, Congo</span>
+            <span className={`text-xs ${isLight ? 'text-gray-600' : 'text-gray-300'}`}>Brazzaville, Congo</span>
           </div>
 
-          <h1 className="text-4xl font-black text-white leading-tight mb-3">
+          <h1 className={`text-4xl font-black leading-tight mb-3 ${isLight ? 'text-gray-900' : 'text-white'}`}>
             Le meilleur<br />
             burger de <span className="text-jaune">Brazza</span>
           </h1>
-          <p className="text-gray-300 text-sm mb-8">
+          <p className={`text-sm mb-8 ${isLight ? 'text-gray-700' : 'text-gray-300'}`}>
             Commandez en ligne, payez comme vous voulez.<br />
             Livraison rapide ou retrait sur place.
           </p>
@@ -72,19 +81,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ---- Bannière Promotion ---- */}
-      <section className="px-4 max-w-md mx-auto mb-6 -mt-4">
-        <div className="bg-gradient-to-r from-jaune/20 to-rouge/20 border border-jaune/30 rounded-2xl p-4 flex items-center gap-3">
-          <span className="text-3xl">🔥</span>
-          <div>
-            <p className="font-bold text-white text-sm">Promo du jour</p>
-            <p className="text-gray-300 text-xs">Menu complet à seulement 5 500 FCFA !</p>
-          </div>
-          <Link to="/menu?categorie=menus" className="ml-auto text-jaune text-xs font-bold whitespace-nowrap">
-            Voir →
-          </Link>
-        </div>
-      </section>
+      {/* ---- Promotions dynamiques ---- */}
+      <PromoCarousel />
 
       {/* ---- Nos Stars ---- */}
       <section className="px-4 max-w-md mx-auto mb-6">

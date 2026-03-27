@@ -6,7 +6,7 @@
 
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { supabase, ecouterNouvellesCommandes, updateStatutCommande } from '../lib/supabase'
+import { supabase, ecouterNouvellesCommandes, updateStatutCommande, getParametre, updateParametre } from '../lib/supabase'
 import { formaterPrix } from '../lib/whatsapp'
 
 // ---- Constantes ----
@@ -113,15 +113,97 @@ function calculerRepartition(commandes, champ) {
 
 // ---- Composant principal ----
 
+// Retourne la fenêtre temporelle {debut, fin, label} selon la période + décalage
+function getWindow(periode, decalage) {
+  const ref = new Date()
+
+  if (periode === 'aujourd_hui') {
+    const jour = new Date(ref)
+    jour.setDate(ref.getDate() - decalage)
+    const debut = new Date(jour); debut.setHours(0, 0, 0, 0)
+    const fin   = new Date(jour); fin.setHours(23, 59, 59, 999)
+    const label = decalage === 0 ? "Aujourd'hui"
+      : decalage === 1 ? `Hier · ${debut.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}`
+      : `${debut.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })}`
+    return { debut, fin, label }
+  }
+
+  if (periode === 'semaine') {
+    const fin   = new Date(ref); fin.setDate(ref.getDate() - decalage * 7); fin.setHours(23, 59, 59, 999)
+    const debut = new Date(fin); debut.setDate(fin.getDate() - 6); debut.setHours(0, 0, 0, 0)
+    const label = decalage === 0 ? '7 derniers jours'
+      : `${debut.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })} – ${fin.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}`
+    return { debut, fin, label }
+  }
+
+  // mois (30 jours)
+  const fin   = new Date(ref); fin.setDate(ref.getDate() - decalage * 30); fin.setHours(23, 59, 59, 999)
+  const debut = new Date(fin); debut.setDate(fin.getDate() - 29); debut.setHours(0, 0, 0, 0)
+  const label = decalage === 0 ? '30 derniers jours'
+    : `${debut.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })} – ${fin.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}`
+  return { debut, fin, label }
+}
+
+function filtrerParWindow(commandes, window) {
+  return commandes.filter(c => {
+    const d = new Date(c.created_at)
+    return d >= window.debut && d <= window.fin
+  })
+}
+
+// Graphique adapté à la période + décalage
+function calculerTendance(commandes, periode, window) {
+  const { debut: wDebut, fin: wFin } = window
+
+  if (periode === 'aujourd_hui') {
+    // Barres par heure sur toute la journée (minuit → 23h)
+    return Array.from({ length: 24 }, (_, i) => {
+      const d = new Date(wDebut); d.setHours(i, 0, 0, 0)
+      const f = new Date(wDebut); f.setHours(i + 1, 0, 0, 0)
+      return {
+        label: `${String(i).padStart(2, '0')}h`,
+        count: commandes.filter(c => { const x = new Date(c.created_at); return x >= d && x < f }).length,
+        futur: d > new Date(),
+      }
+    }).filter(t => !t.futur)
+  }
+
+  if (periode === 'semaine') {
+    // 1 barre par jour
+    const JOURS = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam']
+    return Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(wDebut); d.setDate(wDebut.getDate() + i)
+      const f = new Date(d); f.setDate(d.getDate() + 1)
+      return {
+        label: JOURS[d.getDay()],
+        count: commandes.filter(c => { const x = new Date(c.created_at); return x >= d && x < f }).length,
+      }
+    })
+  }
+
+  // mois → 1 barre par semaine
+  return Array.from({ length: 5 }, (_, i) => {
+    const d = new Date(wDebut); d.setDate(wDebut.getDate() + i * 7)
+    const f = new Date(d); f.setDate(d.getDate() + 7)
+    return {
+      label: `S${i + 1}`,
+      count: commandes.filter(c => { const x = new Date(c.created_at); return x >= d && x < f }).length,
+    }
+  })
+}
+
 export default function Dashboard() {
   const [commandes, setCommandes]           = useState([])
   const [chargement, setChargement]         = useState(true)
   const [periode, setPeriode]               = useState('aujourd_hui')
   const [nouvelleNotif, setNouvelleNotif]   = useState(null)
   const [miseAJour, setMiseAJour]           = useState(null)
+  const [ouvert, setOuvert]                 = useState(true)
+  const [decalage, setDecalage]             = useState(0)
 
   useEffect(() => {
     chargerCommandes()
+    getParametre('restaurant_ouvert').then(v => setOuvert(v !== 'false'))
 
     const seDesabonner = ecouterNouvellesCommandes((nouvelleCommande) => {
       setCommandes(prev => [nouvelleCommande, ...prev])
@@ -132,6 +214,12 @@ export default function Dashboard() {
 
     return seDesabonner
   }, [])
+
+  async function toggleOuvert() {
+    const nouval = !ouvert
+    setOuvert(nouval)
+    await updateParametre('restaurant_ouvert', String(nouval))
+  }
 
   async function chargerCommandes() {
     try {
@@ -165,7 +253,10 @@ export default function Dashboard() {
   }
 
   // ---- Calculs dérivés ----
-  const commandesFiltrees    = filtrerParPeriode(commandes, periode)
+  const window               = getWindow(periode, decalage)
+  const commandesFiltrees    = filtrerParWindow(commandes, window)
+  const tendance             = calculerTendance(commandes, periode, window)
+  const maxTendance          = Math.max(...tendance.map(t => t.count), 1)
   const chiffreAffaires      = commandesFiltrees.reduce((t, c) => t + (c.total || 0), 0)
   const commandesEnCours     = commandes.filter(c => ['en_attente', 'en_preparation', 'en_livraison'].includes(c.statut))
   const topProduits          = calculerTopProduits(commandesFiltrees)
@@ -198,12 +289,25 @@ export default function Dashboard() {
           </p>
         </div>
 
+        {/* Toggle ouvert/fermé */}
+        <button
+          onClick={toggleOuvert}
+          className={`flex items-center gap-3 px-4 py-2.5 rounded-xl border-2 transition-all ${
+            ouvert
+              ? 'border-green-600 bg-green-900/20 text-green-400'
+              : 'border-red-700 bg-red-900/20 text-red-400'
+          }`}
+        >
+          <span className={`w-3 h-3 rounded-full ${ouvert ? 'bg-green-400 animate-pulse' : 'bg-red-500'}`} />
+          <span className="font-bold text-sm">{ouvert ? 'Restaurant Ouvert' : 'Restaurant Fermé'}</span>
+        </button>
+
         {/* Sélecteur de période */}
         <div className="flex gap-1 bg-noir rounded-xl p-1 border border-gray-800 self-start">
           {PERIODES.map(p => (
             <button
               key={p.id}
-              onClick={() => setPeriode(p.id)}
+              onClick={() => { setPeriode(p.id); setDecalage(0) }}
               className={`
                 px-4 py-2 rounded-lg text-xs font-semibold transition-all
                 ${periode === p.id
@@ -231,6 +335,69 @@ export default function Dashboard() {
             <p className={`text-2xl font-black ${stat.couleur}`}>{stat.valeur}</p>
           </div>
         ))}
+      </div>
+
+      {/* ---- Graphique de tendance avec navigation ---- */}
+      <div className="bg-noir rounded-2xl border border-gray-800 p-5">
+        {/* Header avec navigation */}
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="font-bold text-white text-sm">📈 Activité</h2>
+            <p className="text-gray-400 text-xs mt-0.5">{window.label}</p>
+          </div>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => setDecalage(d => d + 1)}
+              className="w-8 h-8 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white transition-colors flex items-center justify-center text-sm"
+              title="Période précédente"
+            >
+              ←
+            </button>
+            {decalage > 0 && (
+              <button
+                onClick={() => setDecalage(0)}
+                className="h-8 px-2 rounded-lg bg-rouge/20 hover:bg-rouge/30 text-rouge text-xs font-bold transition-colors"
+              >
+                Actuel
+              </button>
+            )}
+            <button
+              onClick={() => setDecalage(d => Math.max(0, d - 1))}
+              disabled={decalage === 0}
+              className="w-8 h-8 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white transition-colors flex items-center justify-center text-sm disabled:opacity-30 disabled:cursor-not-allowed"
+              title="Période suivante"
+            >
+              →
+            </button>
+          </div>
+        </div>
+
+        {/* Barres */}
+        {commandesFiltrees.length === 0 && decalage > 0 ? (
+          <p className="text-gray-600 text-sm text-center py-6">Aucune commande sur cette période</p>
+        ) : (
+          <div className="flex items-end gap-1 h-20">
+            {tendance.map((t, i) => (
+              <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                <span className="text-gray-500 text-[9px]">{t.count > 0 ? t.count : ''}</span>
+                <div
+                  className="w-full rounded-t-md transition-all duration-500"
+                  style={{
+                    height: `${Math.max((t.count / maxTendance) * 60, t.count > 0 ? 6 : 2)}px`,
+                    background: t.count > 0 ? `hsl(355, 70%, 55%)` : '#2d2d2d',
+                  }}
+                />
+                <span className="text-gray-600 text-[9px]">{t.label}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Total de la période */}
+        <p className="text-gray-500 text-xs mt-3 text-right">
+          {commandesFiltrees.length} commande{commandesFiltrees.length > 1 ? 's' : ''} ·{' '}
+          {new Intl.NumberFormat('fr-FR').format(commandesFiltrees.reduce((s, c) => s + (c.total || 0), 0))} FCFA
+        </p>
       </div>
 
       {/* ---- Top produits + Répartitions ---- */}

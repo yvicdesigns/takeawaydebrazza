@@ -11,20 +11,19 @@
 /* ---- Styles de base ---- */
 @layer base {
   * {
-    /* Évite les débordements horizontaux sur mobile */
     box-sizing: border-box;
   }
 
   html {
-    /* Défilement fluide pour toute la page */
     scroll-behavior: smooth;
+    /* Transition douce lors du changement de thème */
+    transition: background-color 0.3s ease;
   }
 
   body {
-    /* Fond noir, texte blanc — thème sombre Big Man */
     @apply bg-noir text-white font-sans;
-    /* Empêche le zoom involontaire sur iOS lors du focus sur un input */
     -webkit-text-size-adjust: 100%;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   /* Style par défaut des images : toujours responsive */
@@ -72,7 +71,7 @@
   /* Carte produit — fond noir légèrement clair */
   .carte-produit {
     @apply bg-noir-clair rounded-2xl overflow-hidden shadow-lg hover:shadow-xl
-           transition-all duration-200 hover:-translate-y-1;
+           transition-all duration-200 hover:-translate-y-1 active:scale-[0.97];
   }
 
   /* Input de formulaire */
@@ -94,6 +93,95 @@
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
   }
+
+  /* Input en mode light */
+  html.light .input-field {
+    background-color: #FFFFFF;
+    border-color: #D1D5DB;
+    color: #1A1A1A;
+  }
+  html.light .input-field::placeholder {
+    color: #9CA3AF;
+  }
+  html.light .input-field:focus {
+    border-color: #CC1626;
+  }
+}
+
+/* ============================================================
+   MODE LIGHT — Overrides automatiques (7h-19h)
+   Palette : crème chaude #FFF9F0, cartes #FFFFFF
+   ============================================================ */
+
+html.light body {
+  background-color: #FFF9F0;
+  color: #1A1A1A;
+}
+
+/* Fonds principaux */
+html.light .bg-noir        { background-color: #FFF9F0 !important; }
+html.light .bg-\[\#111\]   { background-color: #F5F0E8 !important; }
+html.light .bg-noir-clair  { background-color: #FFFFFF !important; }
+html.light .bg-noir\/95    { background-color: rgba(255,249,240,0.95) !important; }
+html.light .bg-gray-700    { background-color: #E5E7EB !important; }
+html.light .bg-gray-800    { background-color: #F3F4F6 !important; }
+html.light .bg-black\/60   { background-color: rgba(0,0,0,0.4) !important; }
+
+/* Textes */
+html.light .text-white     { color: #1A1A1A !important; }
+html.light .text-gray-300  { color: #4B5563 !important; }
+html.light .text-gray-400  { color: #6B7280 !important; }
+html.light .text-gray-500  { color: #9CA3AF !important; }
+html.light .text-gray-600  { color: #9CA3AF !important; }
+html.light .text-gray-700  { color: #D1D5DB !important; }
+
+/* text-noir doit RESTER sombre (texte sur fond jaune) */
+html.light .text-noir      { color: #0A0A0A !important; }
+
+/* Bordures */
+html.light .border-gray-800  { border-color: #E5E7EB !important; }
+html.light .border-gray-700  { border-color: #D1D5DB !important; }
+html.light .border-t         { border-top-color: #E5E7EB; }
+
+/* Hover states */
+html.light .hover\:bg-gray-700:hover   { background-color: #F3F4F6 !important; }
+html.light .hover\:bg-gray-800:hover   { background-color: #E5E7EB !important; }
+html.light .hover\:bg-noir-clair\/50:hover { background-color: rgba(255,255,255,0.9) !important; }
+html.light .hover\:bg-gray-800\/50:hover   { background-color: rgba(229,231,235,0.5) !important; }
+
+/* Skeleton loader */
+html.light .skeleton {
+  background: linear-gradient(90deg, #E5E7EB 25%, #F3F4F6 50%, #E5E7EB 75%) !important;
+  background-size: 200% 100% !important;
+}
+
+/* Scrollbar */
+html.light ::-webkit-scrollbar-track { background-color: #F3F4F6; }
+
+/* Overlay/gradient noir */
+html.light .gradient-noir {
+  background: linear-gradient(to top, rgba(255,249,240,0.97) 0%, transparent 100%);
+}
+
+/* Backdrop blur header */
+html.light header {
+  border-bottom-color: #E5E7EB;
+}
+
+/* Transition sur tous les éléments clés */
+html.light *,
+html.dark * {
+  transition-property: background-color, border-color, color;
+  transition-duration: 0.25s;
+  transition-timing-function: ease;
+}
+
+/* Exceptions : ne pas animer les animations existantes */
+html.light .animate-spin,
+html.dark .animate-spin,
+html.light .animate-pulse,
+html.dark .animate-pulse {
+  transition: none;
 }
 
 /* ---- Utilitaires personnalisés ---- */
@@ -131,4 +219,118 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
+}
+
+/* ============================================================
+   ANIMATIONS MENU
+   ============================================================ */
+
+/* 1. Entrée en cascade des cartes */
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 2. Pop du bouton + au tap */
+@keyframes btn-pop {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.45); }
+  65%  { transform: scale(0.85); }
+  100% { transform: scale(1); }
+}
+
+/* 3. Particule qui monte vers le panier */
+@keyframes float-up {
+  0%   { opacity: 1;   transform: translateY(0)    scale(1); }
+  70%  { opacity: 0.6; transform: translateY(-50px) scale(0.7); }
+  100% { opacity: 0;   transform: translateY(-80px) scale(0.1); }
+}
+
+/* 4. Pop du badge quantité */
+@keyframes badge-pop {
+  0%   { transform: scale(1); }
+  45%  { transform: scale(1.55); }
+  100% { transform: scale(1); }
+}
+
+/* 5. Reflet lumineux sur l'image */
+@keyframes img-shine {
+  0%   { left: -60%; opacity: 1; }
+  100% { left: 130%;  opacity: 0.5; }
+}
+
+/* 6. Shimmer pour skeleton */
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* 7. Slide up (déjà utilisé) */
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Classes utilitaires */
+.animate-card-in {
+  animation: card-in 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.animate-btn-pop {
+  animation: btn-pop 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-float-up {
+  animation: float-up 0.65s ease-out forwards;
+  pointer-events: none;
+}
+
+.animate-badge-pop {
+  animation: badge-pop 0.32s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.25s ease both;
+}
+
+/* Reflet image — lancé une seule fois à l'entrée */
+.img-shine-layer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 35%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.22) 50%,
+    transparent 100%
+  );
+  transform: skewX(-18deg);
+  animation: img-shine 0.75s ease-out both;
+  pointer-events: none;
+}
+
+/* Exceptions thème */
+html.light .animate-spin,
+html.dark  .animate-spin,
+html.light .animate-pulse,
+html.dark  .animate-pulse,
+html.light .animate-card-in,
+html.dark  .animate-card-in {
+  transition: none;
 }

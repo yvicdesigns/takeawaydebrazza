@@ -82,6 +82,43 @@ CREATE POLICY "Lecture des commandes" ON commandes
 CREATE POLICY "Mise à jour des commandes" ON commandes
   FOR UPDATE USING (TRUE);
 
+-- ---- TABLE : messages ----
+-- Messages directs entre l'admin et un client (par numéro de téléphone)
+CREATE TABLE IF NOT EXISTS messages (
+  id          BIGSERIAL PRIMARY KEY,
+  telephone   TEXT NOT NULL,                        -- Numéro du client
+  nom_client  TEXT,                                 -- Nom du client (pour l'affichage admin)
+  expediteur  TEXT NOT NULL CHECK (expediteur IN ('admin', 'client')),
+  contenu     TEXT NOT NULL,
+  lu          BOOLEAN DEFAULT FALSE,
+  created_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_messages_telephone  ON messages(telephone);
+CREATE INDEX IF NOT EXISTS idx_messages_created_at ON messages(created_at DESC);
+
+ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Lecture publique des messages"   ON messages FOR SELECT USING (TRUE);
+CREATE POLICY "Insertion publique des messages" ON messages FOR INSERT WITH CHECK (TRUE);
+CREATE POLICY "Mise à jour des messages"        ON messages FOR UPDATE USING (TRUE);
+
+-- ---- TABLE : notifications ----
+-- Annonces broadcast envoyées par l'admin à tous les clients
+CREATE TABLE IF NOT EXISTS notifications (
+  id          BIGSERIAL PRIMARY KEY,
+  titre       TEXT NOT NULL,
+  contenu     TEXT NOT NULL,
+  emoji       TEXT DEFAULT '📢',
+  created_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Lecture publique des notifications"   ON notifications FOR SELECT USING (TRUE);
+CREATE POLICY "Insertion publique des notifications" ON notifications FOR INSERT WITH CHECK (TRUE);
+CREATE POLICY "Suppression des notifications"        ON notifications FOR DELETE USING (TRUE);
+
 -- ---- ACTIVATION DU TEMPS RÉEL ----
--- Active la réplication pour le suivi en temps réel des commandes
-ALTER PUBLICATION supabase_realtime ADD TABLE commandes;
+-- Active la réplication pour le suivi en temps réel des commandes et messages
+ALTER PUBLICATION supabase_realtime ADD TABLE commandes;  -- Déjà ajouté si schéma existant
+ALTER PUBLICATION supabase_realtime ADD TABLE messages;
+ALTER PUBLICATION supabase_realtime ADD TABLE notifications;
