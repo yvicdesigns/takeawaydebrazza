@@ -146,7 +146,7 @@ export default function ManageAvis() {
                   value={reponses[a.id] || ''}
                   onChange={e => setReponses(prev => ({ ...prev, [a.id]: e.target.value }))}
                   placeholder={a.reponse_admin ? 'Modifier la réponse...' : 'Répondre à cet avis...'}
-                  className="flex-1 bg-[#1a1a1a] border border-gray-700 text-white text-sm rounded-xl px-3 py-2 focus:outline-none focus:border-rouge"
+                  className="flex-1 input-field text-sm py-2"
                   onKeyDown={e => e.key === 'Enter' && envoyerReponse(a.id)}
                 />
                 <button

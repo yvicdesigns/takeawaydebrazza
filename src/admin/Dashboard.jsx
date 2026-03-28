@@ -6,7 +6,7 @@
 
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { supabase, ecouterNouvellesCommandes, updateStatutCommande, getParametre, updateParametre } from '../lib/supabase'
+import { supabase, updateStatutCommande, getParametre, updateParametre } from '../lib/supabase'
 import { formaterPrix } from '../lib/whatsapp'
 
 // ---- Constantes ----
@@ -52,10 +52,22 @@ const COMMANDES_DEMO = [
 
 // ---- Fonctions utilitaires ----
 
+// Contexte audio partagé — débloqué au premier clic utilisateur
+let _audioCtx = null
+function getAudioCtx() {
+  if (!_audioCtx) {
+    _audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+  }
+  if (_audioCtx.state === 'suspended') {
+    _audioCtx.resume().catch(() => {})
+  }
+  return _audioCtx
+}
+
 // Double bip sonore à la réception d'une nouvelle commande
 function jouerSonNotification() {
   try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)()
+    const ctx = getAudioCtx()
     ;[0, 0.25].forEach((delai, i) => {
       const osc  = ctx.createOscillator()
       const gain = ctx.createGain()
@@ -200,19 +212,32 @@ export default function Dashboard() {
   const [miseAJour, setMiseAJour]           = useState(null)
   const [ouvert, setOuvert]                 = useState(true)
   const [decalage, setDecalage]             = useState(0)
+  const [connecte, setConnecte]             = useState(false)
+
+  // Débloque l'AudioContext au premier clic (politique navigateur)
+  useEffect(() => {
+    const unlock = () => { getAudioCtx(); document.removeEventListener('click', unlock) }
+    document.addEventListener('click', unlock)
+    return () => document.removeEventListener('click', unlock)
+  }, [])
 
   useEffect(() => {
     chargerCommandes()
     getParametre('restaurant_ouvert').then(v => setOuvert(v !== 'false'))
 
-    const seDesabonner = ecouterNouvellesCommandes((nouvelleCommande) => {
-      setCommandes(prev => [nouvelleCommande, ...prev])
-      setNouvelleNotif(nouvelleCommande)
-      jouerSonNotification()
-      setTimeout(() => setNouvelleNotif(null), 5000)
-    })
+    const subscription = supabase
+      .channel('nouvelles-commandes')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'commandes' }, (payload) => {
+        setCommandes(prev => [payload.new, ...prev])
+        setNouvelleNotif(payload.new)
+        jouerSonNotification()
+        setTimeout(() => setNouvelleNotif(null), 5000)
+      })
+      .subscribe((status) => {
+        setConnecte(status === 'SUBSCRIBED')
+      })
 
-    return seDesabonner
+    return () => supabase.removeChannel(subscription)
   }, [])
 
   async function toggleOuvert() {
@@ -284,9 +309,15 @@ export default function Dashboard() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-white">Tableau de bord</h1>
-          <p className="text-gray-400 text-sm">
-            {new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
-          </p>
+          <div className="flex items-center gap-2 mt-1">
+            <p className="text-gray-400 text-sm">
+              {new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
+            </p>
+            <span className={`flex items-center gap-1 text-xs ${connecte ? 'text-green-400' : 'text-gray-600'}`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${connecte ? 'bg-green-400 animate-pulse' : 'bg-gray-600'}`} />
+              {connecte ? 'En direct' : 'Hors ligne'}
+            </span>
+          </div>
         </div>
 
         {/* Toggle ouvert/fermé */}
