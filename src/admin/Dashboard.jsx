@@ -230,7 +230,7 @@ export default function Dashboard() {
         .limit(200)
 
       if (error) throw error
-      setCommandes(data?.length > 0 ? data : COMMANDES_DEMO)
+      setCommandes(data || [])
     } catch {
       setCommandes(COMMANDES_DEMO)
     } finally {

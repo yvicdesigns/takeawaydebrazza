@@ -4,7 +4,7 @@
 // ============================================================
 
 import { useState, useEffect } from 'react'
-import { getParametre, updateParametre, getCodesPromo, sauvegarderCodesPromo } from '../lib/supabase'
+import { supabase, getParametre, updateParametre, getCodesPromo, sauvegarderCodesPromo } from '../lib/supabase'
 import { formaterPrix } from '../lib/whatsapp'
 
 const JOURS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']
@@ -37,7 +37,9 @@ function Champ({ label, children }) {
 }
 
 export default function ManageParametres() {
-  const [sauve, setSauve] = useState('')
+  const [sauve, setSauve]             = useState('')
+  const [reinitConfirm, setReinitConfirm] = useState(false)
+  const [reinitEnCours, setReinitEnCours] = useState(false)
 
   // ---- Infos restaurant ----
   const [nomResto,     setNomResto]     = useState('BIG MAN')
@@ -183,6 +185,24 @@ export default function ManageParametres() {
     const maj = codes.filter((_, i) => i !== index)
     setCodes(maj)
     sauvegarderCodesPromo(maj)
+  }
+
+  // ---- Réinitialisation données ----
+  async function reinitialiserDonnees() {
+    setReinitEnCours(true)
+    try {
+      await Promise.all([
+        supabase.from('commandes').delete().neq('id', 0),
+        supabase.from('avis').delete().neq('id', 0),
+        supabase.from('soldes_clients').delete().neq('id', 0),
+      ])
+      setReinitConfirm(false)
+      flash('Données réinitialisées — application prête pour la démo')
+    } catch {
+      flash('Erreur lors de la réinitialisation')
+    } finally {
+      setReinitEnCours(false)
+    }
   }
 
   return (
@@ -506,6 +526,44 @@ export default function ManageParametres() {
                 </button>
               </div>
             ))}
+          </div>
+        )}
+      </div>
+
+      {/* ---- Zone de danger : Réinitialisation ---- */}
+      <div className="bg-noir rounded-2xl border border-red-900/50 p-5">
+        <h2 className="font-bold text-red-400 text-sm mb-1">⚠️ Zone de danger</h2>
+        <p className="text-gray-500 text-xs mb-4">
+          Efface toutes les commandes, avis et soldes clients. Le menu, les promotions et les paramètres sont conservés. Utile avant une démo.
+        </p>
+
+        {!reinitConfirm ? (
+          <button
+            onClick={() => setReinitConfirm(true)}
+            className="px-4 py-2 rounded-xl text-sm font-bold border border-red-700 text-red-400 hover:bg-red-900/20 transition-colors"
+          >
+            🗑 Réinitialiser les données
+          </button>
+        ) : (
+          <div className="space-y-3">
+            <p className="text-red-300 text-sm font-semibold">
+              Confirmer ? Cette action est irréversible.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={reinitialiserDonnees}
+                disabled={reinitEnCours}
+                className="px-4 py-2 rounded-xl text-sm font-bold bg-red-700 hover:bg-red-600 text-white transition-colors disabled:opacity-50"
+              >
+                {reinitEnCours ? 'Réinitialisation...' : 'Oui, tout effacer'}
+              </button>
+              <button
+                onClick={() => setReinitConfirm(false)}
+                className="px-4 py-2 rounded-xl text-sm font-bold border border-gray-700 text-gray-400 hover:text-white transition-colors"
+              >
+                Annuler
+              </button>
+            </div>
           </div>
         )}
       </div>
