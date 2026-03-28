@@ -5,6 +5,7 @@
 
 import { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom'
+import { useTheme } from '../context/ThemeContext'
 
 const LIENS_PRINCIPAUX = [
   { vers: '/admin/dashboard',  label: 'Tableau de bord', emoji: '📊' },
@@ -28,6 +29,7 @@ const LIENS_PARAMETRES = [
 export default function AdminLayout() {
   const location  = useLocation()
   const navigate  = useNavigate()
+  const { theme, basculerTheme } = useTheme()
   const [menuOuvert, setMenuOuvert]   = useState(false)
 
   // Ouvrir le groupe Paramètres si on est sur une de ses pages
@@ -124,11 +126,25 @@ export default function AdminLayout() {
         </nav>
 
         {/* Bas de sidebar */}
-        <div className="flex-shrink-0 p-4 border-t border-gray-800">
-          <Link to="/" className="flex items-center gap-2 text-gray-400 hover:text-white text-sm mb-3 transition-colors">
+        <div className="flex-shrink-0 p-4 border-t border-gray-800 space-y-2">
+          {/* Toggle thème */}
+          <button
+            onClick={basculerTheme}
+            className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-noir-clair hover:bg-gray-800 transition-colors"
+          >
+            <span className="text-gray-400 text-sm flex items-center gap-2">
+              {theme === 'dark' ? '🌙' : '☀️'}
+              {theme === 'dark' ? 'Mode sombre' : 'Mode clair'}
+            </span>
+            <div className={`w-10 h-5 rounded-full transition-colors relative ${theme === 'light' ? 'bg-jaune' : 'bg-gray-700'}`}>
+              <span className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-all ${theme === 'light' ? 'left-5' : 'left-0.5'}`} />
+            </div>
+          </button>
+
+          <Link to="/" className="flex items-center gap-2 text-gray-400 hover:text-white text-sm px-3 py-2 transition-colors">
             👁️ Voir l'app client
           </Link>
-          <button onClick={seDeconnecter} className="flex items-center gap-2 text-gray-400 hover:text-rouge text-sm transition-colors">
+          <button onClick={seDeconnecter} className="flex items-center gap-2 text-gray-400 hover:text-rouge text-sm px-3 py-2 transition-colors">
             🚪 Se déconnecter
           </button>
         </div>
