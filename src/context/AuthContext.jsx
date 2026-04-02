@@ -12,9 +12,9 @@ const AuthContext = createContext(null)
 // ---- Helpers ----
 
 // Génère un email synthétique à partir du numéro de téléphone
-// (Supabase Auth requiert un email — on utilise téléphone@bigman.local)
+// (Supabase Auth requiert un email — on utilise téléphone@takeawaydebrazza.local)
 function emailSynthetique(telephone) {
-  return telephone.replace(/\D/g, '') + '@bigman.local'
+  return telephone.replace(/\D/g, '') + '@takeawaydebrazza.local'
 }
 
 // Récupère le profil complet depuis la table profiles
@@ -36,7 +36,7 @@ export function AuthProvider({ children }) {
     if (!supabaseConfigured) {
       // Fallback localStorage si Supabase non configuré
       try {
-        const raw = localStorage.getItem('bigman_utilisateur')
+        const raw = localStorage.getItem('takeawaydebrazza_utilisateur')
         if (raw) setUtilisateur(JSON.parse(raw))
       } catch { /* ignore */ }
       setChargement(false)
@@ -188,7 +188,7 @@ export function AuthProvider({ children }) {
     if (supabaseConfigured) {
       await supabase.auth.signOut()
     } else {
-      localStorage.removeItem('bigman_utilisateur')
+      localStorage.removeItem('takeawaydebrazza_utilisateur')
     }
     setUtilisateur(null)
   }
@@ -198,7 +198,7 @@ export function AuthProvider({ children }) {
   // ================================================================
 
   function inscrireLocal({ nom, telephone, motDePasse, username }) {
-    const comptes = JSON.parse(localStorage.getItem('bigman_comptes') || '[]')
+    const comptes = JSON.parse(localStorage.getItem('takeawaydebrazza_comptes') || '[]')
     if (comptes.find(c => c.telephone === telephone.trim()))
       return { ok: false, champ: 'telephone', erreur: 'Ce numéro est déjà utilisé. Connectez-vous.' }
     const un = username?.trim().replace(/^@/, '').toLowerCase() || null
@@ -209,15 +209,15 @@ export function AuthProvider({ children }) {
       username: un, motDePasse, createdAt: new Date().toISOString(),
     }
     comptes.push(compte)
-    localStorage.setItem('bigman_comptes', JSON.stringify(comptes))
+    localStorage.setItem('takeawaydebrazza_comptes', JSON.stringify(comptes))
     const { motDePasse: _, ...session } = compte
-    localStorage.setItem('bigman_utilisateur', JSON.stringify(session))
+    localStorage.setItem('takeawaydebrazza_utilisateur', JSON.stringify(session))
     setUtilisateur(session)
     return { ok: true }
   }
 
   function connexionLocal({ identifiant, motDePasse }) {
-    const comptes = JSON.parse(localStorage.getItem('bigman_comptes') || '[]')
+    const comptes = JSON.parse(localStorage.getItem('takeawaydebrazza_comptes') || '[]')
     const id = identifiant.trim().replace(/^@/, '').toLowerCase()
     const compte = comptes.find(c =>
       c.telephone === identifiant.trim() ||
@@ -228,19 +228,19 @@ export function AuthProvider({ children }) {
     if (compte.motDePasse === null) return { ok: false, erreur: 'DEFINIR_MDP', compte }
     if (compte.motDePasse !== motDePasse) return { ok: false, erreur: 'Mot de passe incorrect.' }
     const { motDePasse: _, ...session } = compte
-    localStorage.setItem('bigman_utilisateur', JSON.stringify(session))
+    localStorage.setItem('takeawaydebrazza_utilisateur', JSON.stringify(session))
     setUtilisateur(session)
     return { ok: true }
   }
 
   function definirMotDePasseLocal({ compteId, motDePasse }) {
-    const comptes = JSON.parse(localStorage.getItem('bigman_comptes') || '[]')
+    const comptes = JSON.parse(localStorage.getItem('takeawaydebrazza_comptes') || '[]')
     const idx = comptes.findIndex(c => c.id === compteId)
     if (idx === -1) return { ok: false, erreur: 'Compte introuvable.' }
     comptes[idx].motDePasse = motDePasse
-    localStorage.setItem('bigman_comptes', JSON.stringify(comptes))
+    localStorage.setItem('takeawaydebrazza_comptes', JSON.stringify(comptes))
     const { motDePasse: _, ...session } = comptes[idx]
-    localStorage.setItem('bigman_utilisateur', JSON.stringify(session))
+    localStorage.setItem('takeawaydebrazza_utilisateur', JSON.stringify(session))
     setUtilisateur(session)
     return { ok: true }
   }
@@ -250,18 +250,18 @@ export function AuthProvider({ children }) {
     if (infos.username !== undefined) {
       const un = infos.username?.trim().replace(/^@/, '').toLowerCase() || null
       if (un) {
-        const comptes = JSON.parse(localStorage.getItem('bigman_comptes') || '[]')
+        const comptes = JSON.parse(localStorage.getItem('takeawaydebrazza_comptes') || '[]')
         if (comptes.find(c => c.id !== utilisateur.id && c.username === un))
           return { ok: false, erreur: 'Ce nom d\'utilisateur est déjà pris.' }
       }
       infos.username = un
     }
     const maj = { ...utilisateur, ...infos }
-    localStorage.setItem('bigman_utilisateur', JSON.stringify(maj))
+    localStorage.setItem('takeawaydebrazza_utilisateur', JSON.stringify(maj))
     setUtilisateur(maj)
-    const comptes = JSON.parse(localStorage.getItem('bigman_comptes') || '[]')
+    const comptes = JSON.parse(localStorage.getItem('takeawaydebrazza_comptes') || '[]')
     const idx = comptes.findIndex(c => c.id === utilisateur.id)
-    if (idx !== -1) { comptes[idx] = { ...comptes[idx], ...infos }; localStorage.setItem('bigman_comptes', JSON.stringify(comptes)) }
+    if (idx !== -1) { comptes[idx] = { ...comptes[idx], ...infos }; localStorage.setItem('takeawaydebrazza_comptes', JSON.stringify(comptes)) }
     return { ok: true }
   }
 

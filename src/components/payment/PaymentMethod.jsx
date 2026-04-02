@@ -120,7 +120,7 @@ export default function PaymentMethod({
             <div>
               <p className="text-gray-400 text-xs">Numéro {nomOperateur}</p>
               <p className="text-white font-black text-lg tracking-wider">{numeroMobileMoney}</p>
-              <p className="text-jaune text-xs font-semibold">Big Man Fast Food</p>
+              <p className="text-jaune text-xs font-semibold">Takeaway De Brazza Fast Food</p>
             </div>
             <button
               type="button"

@@ -155,7 +155,7 @@ export default function ManageRapports() {
     const url  = URL.createObjectURL(blob)
     const a    = document.createElement('a')
     a.href = url
-    a.download = `rapport_bigman_${dateDebut}_${dateFin}.csv`
+    a.download = `rapport_takeawaydebrazza_${dateDebut}_${dateFin}.csv`
     a.click()
     URL.revokeObjectURL(url)
   }
@@ -172,7 +172,7 @@ export default function ManageRapports() {
 
     return `
       <html><head>
-      <title>Rapport BIG MAN — ${dateDebut} au ${dateFin}</title>
+      <title>Rapport TAKEAWAY DE BRAZZA — ${dateDebut} au ${dateFin}</title>
       <style>
         @page { size: A4; margin: 20mm; }
         * { box-sizing: border-box; }
@@ -199,7 +199,7 @@ export default function ManageRapports() {
 
       <div class="header">
         <div>
-          <div class="logo">🍔 BIG MAN</div>
+          <div class="logo">🍔 TAKEAWAY DE BRAZZA</div>
           <div style="color:#666;font-size:10px;margin-top:4px">Rapport de performance</div>
         </div>
         <div class="meta">
@@ -245,7 +245,7 @@ export default function ManageRapports() {
         ${topProduitsHTML}
       </table>` : ''}
 
-      <div class="footer">BIG MAN — Rapport généré automatiquement · ${new Date().toLocaleDateString('fr-FR')}</div>
+      <div class="footer">TAKEAWAY DE BRAZZA — Rapport généré automatiquement · ${new Date().toLocaleDateString('fr-FR')}</div>
       </body></html>
     `
   }

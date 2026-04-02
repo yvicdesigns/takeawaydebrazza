@@ -43,11 +43,11 @@ const LABELS_LIVRAISON = {
 
 // Données de démonstration
 const COMMANDES_DEMO = [
-  { id: 'CMD001', nom_client: 'Jean Moukala',   telephone: '06 123 4567', statut: 'en_attente',     total: 5500,  mode_livraison: 'livraison', mode_paiement: 'cash',         produits: [{ nom: 'Menu Big Man', quantite: 1, prix: 5500 }],                                                        created_at: new Date().toISOString() },
-  { id: 'CMD002', nom_client: 'Marie Loemba',   telephone: '05 987 6543', statut: 'en_preparation', total: 3000,  mode_livraison: 'retrait',   mode_paiement: 'mtn_momo',     produits: [{ nom: 'Big Man Crispy', quantite: 1, prix: 3000 }],                                                      created_at: new Date().toISOString() },
+  { id: 'CMD001', nom_client: 'Jean Moukala',   telephone: '06 123 4567', statut: 'en_attente',     total: 5500,  mode_livraison: 'livraison', mode_paiement: 'cash',         produits: [{ nom: 'Menu Takeaway De Brazza', quantite: 1, prix: 5500 }],                                                        created_at: new Date().toISOString() },
+  { id: 'CMD002', nom_client: 'Marie Loemba',   telephone: '05 987 6543', statut: 'en_preparation', total: 3000,  mode_livraison: 'retrait',   mode_paiement: 'mtn_momo',     produits: [{ nom: 'Takeaway De Brazza Crispy', quantite: 1, prix: 3000 }],                                                      created_at: new Date().toISOString() },
   { id: 'CMD003', nom_client: 'Pierre Ndouki',  telephone: '06 555 1234', statut: 'en_livraison',   total: 11000, mode_livraison: 'livraison', mode_paiement: 'airtel_money', produits: [{ nom: 'Combo Famille', quantite: 1, prix: 18000 }, { nom: 'Coca-Cola', quantite: 2, prix: 500 }],          created_at: new Date().toISOString() },
-  { id: 'CMD004', nom_client: 'Sophie Bakala',  telephone: '05 321 9876', statut: 'livre',          total: 5500,  mode_livraison: 'retrait',   mode_paiement: 'cash',         produits: [{ nom: 'Menu Big Man', quantite: 1, prix: 5500 }],                                                        created_at: new Date().toISOString() },
-  { id: 'CMD005', nom_client: 'Alain Massamba', telephone: '06 789 0123', statut: 'livre',          total: 4000,  mode_livraison: 'livraison', mode_paiement: 'mtn_momo',     produits: [{ nom: 'Big Man Classic', quantite: 1, prix: 3500 }, { nom: 'Jus de Bissap', quantite: 1, prix: 500 }],  created_at: new Date().toISOString() },
+  { id: 'CMD004', nom_client: 'Sophie Bakala',  telephone: '05 321 9876', statut: 'livre',          total: 5500,  mode_livraison: 'retrait',   mode_paiement: 'cash',         produits: [{ nom: 'Menu Takeaway De Brazza', quantite: 1, prix: 5500 }],                                                        created_at: new Date().toISOString() },
+  { id: 'CMD005', nom_client: 'Alain Massamba', telephone: '06 789 0123', statut: 'livre',          total: 4000,  mode_livraison: 'livraison', mode_paiement: 'mtn_momo',     produits: [{ nom: 'Takeaway De Brazza Classic', quantite: 1, prix: 3500 }, { nom: 'Jus de Bissap', quantite: 1, prix: 500 }],  created_at: new Date().toISOString() },
 ]
 
 // ---- Fonctions utilitaires ----

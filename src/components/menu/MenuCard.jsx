@@ -12,15 +12,15 @@ import { formaterPrix } from '../../lib/whatsapp'
 
 function useFavori(id) {
   const [favori, setFavori] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('bigman_favoris') || '[]').includes(id) } catch { return false }
+    try { return JSON.parse(localStorage.getItem('takeawaydebrazza_favoris') || '[]').includes(id) } catch { return false }
   })
   function toggle(e) {
     e.stopPropagation()
-    const liste = JSON.parse(localStorage.getItem('bigman_favoris') || '[]')
+    const liste = JSON.parse(localStorage.getItem('takeawaydebrazza_favoris') || '[]')
     const maj = favori ? liste.filter(x => x !== id) : [...liste, id]
-    localStorage.setItem('bigman_favoris', JSON.stringify(maj))
+    localStorage.setItem('takeawaydebrazza_favoris', JSON.stringify(maj))
     setFavori(!favori)
-    window.dispatchEvent(new Event('bigman_favoris_change'))
+    window.dispatchEvent(new Event('takeawaydebrazza_favoris_change'))
   }
   return [favori, toggle]
 }

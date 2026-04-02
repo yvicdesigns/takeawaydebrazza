@@ -12,7 +12,7 @@ import Button from '../components/ui/Button'
 import { formaterPrix, calculerFraisLivraison } from '../lib/whatsapp'
 import { getSolde, debiterSoldeCommande, uploadScreenshotPaiement, getInfosRestaurant, validerCodePromo } from '../lib/supabase'
 
-const CLE_ADRESSES = 'bigman_adresses'
+const CLE_ADRESSES = 'takeawaydebrazza_adresses'
 
 function getAdressesSauvegardees() {
   try { return JSON.parse(localStorage.getItem(CLE_ADRESSES) || '[]') } catch { return [] }
@@ -34,7 +34,7 @@ export default function Checkout() {
   const [formulaire, setFormulaire] = useState({
     nom: utilisateur?.nom || '',
     telephone: utilisateur?.telephone || '',
-    adresse: localStorage.getItem('bigman_adresse_favorite') || '',
+    adresse: localStorage.getItem('takeawaydebrazza_adresse_favorite') || '',
     notes: '',
   })
 
@@ -174,7 +174,7 @@ export default function Checkout() {
       })
 
       if (modeLivraison === 'livraison' && formulaire.adresse.trim()) {
-        localStorage.setItem('bigman_adresse_favorite', formulaire.adresse.trim())
+        localStorage.setItem('takeawaydebrazza_adresse_favorite', formulaire.adresse.trim())
         sauvegarderAdresse(formulaire.adresse.trim())
       }
 
@@ -358,7 +358,7 @@ export default function Checkout() {
                   type="text"
                   value={codePromo}
                   onChange={(e) => { setCodePromo(e.target.value.toUpperCase()); setPromoErreur('') }}
-                  placeholder="BIGMAN10"
+                  placeholder="TAKEAWAYDEBRAZZA10"
                   className="input-field flex-1 uppercase"
                 />
                 <button

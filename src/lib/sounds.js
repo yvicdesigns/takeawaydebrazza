@@ -14,25 +14,25 @@ function ac() {
 // ---- Lecture des réglages ----
 export function getAudioSettings() {
   return {
-    active:        localStorage.getItem('bigman_audio_master')   !== 'false',
-    voice:         localStorage.getItem('bigman_audio_voice')    !== 'false',
-    volClick:      parseFloat(localStorage.getItem('bigman_audio_vol_click')   ?? '1'),
-    volOrder:      parseFloat(localStorage.getItem('bigman_audio_vol_order')   ?? '1'),
-    volPayment:    parseFloat(localStorage.getItem('bigman_audio_vol_payment') ?? '1'),
-    customOrder:   localStorage.getItem('bigman_audio_custom_order')   ?? null,
-    customPayment: localStorage.getItem('bigman_audio_custom_payment') ?? null,
+    active:        localStorage.getItem('takeawaydebrazza_audio_master')   !== 'false',
+    voice:         localStorage.getItem('takeawaydebrazza_audio_voice')    !== 'false',
+    volClick:      parseFloat(localStorage.getItem('takeawaydebrazza_audio_vol_click')   ?? '1'),
+    volOrder:      parseFloat(localStorage.getItem('takeawaydebrazza_audio_vol_order')   ?? '1'),
+    volPayment:    parseFloat(localStorage.getItem('takeawaydebrazza_audio_vol_payment') ?? '1'),
+    customOrder:   localStorage.getItem('takeawaydebrazza_audio_custom_order')   ?? null,
+    customPayment: localStorage.getItem('takeawaydebrazza_audio_custom_payment') ?? null,
   }
 }
 
 export function saveAudioSettings(patch) {
   const map = {
-    active:        'bigman_audio_master',
-    voice:         'bigman_audio_voice',
-    volClick:      'bigman_audio_vol_click',
-    volOrder:      'bigman_audio_vol_order',
-    volPayment:    'bigman_audio_vol_payment',
-    customOrder:   'bigman_audio_custom_order',
-    customPayment: 'bigman_audio_custom_payment',
+    active:        'takeawaydebrazza_audio_master',
+    voice:         'takeawaydebrazza_audio_voice',
+    volClick:      'takeawaydebrazza_audio_vol_click',
+    volOrder:      'takeawaydebrazza_audio_vol_order',
+    volPayment:    'takeawaydebrazza_audio_vol_payment',
+    customOrder:   'takeawaydebrazza_audio_custom_order',
+    customPayment: 'takeawaydebrazza_audio_custom_payment',
   }
   Object.entries(patch).forEach(([k, v]) => {
     if (map[k]) {

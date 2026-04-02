@@ -89,7 +89,7 @@ export function CartProvider({ children }) {
     { items: [] },
     (initial) => {
       try {
-        const panierSauvegarde = localStorage.getItem('bigman_panier')
+        const panierSauvegarde = localStorage.getItem('takeawaydebrazza_panier')
         return panierSauvegarde ? { items: JSON.parse(panierSauvegarde) } : initial
       } catch {
         return initial
@@ -100,7 +100,7 @@ export function CartProvider({ children }) {
   // Sauvegarde le panier dans localStorage à chaque changement
   // Ainsi, le panier n'est pas perdu si l'utilisateur ferme l'app
   useEffect(() => {
-    localStorage.setItem('bigman_panier', JSON.stringify(etat.items))
+    localStorage.setItem('takeawaydebrazza_panier', JSON.stringify(etat.items))
   }, [etat.items])
 
   // Calcule le nombre total d'articles dans le panier

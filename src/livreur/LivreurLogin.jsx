@@ -31,7 +31,7 @@ export default function LivreurLogin() {
         return
       }
       // Stocke la session livreur
-      sessionStorage.setItem('bigman_livreur', JSON.stringify(livreur))
+      sessionStorage.setItem('takeawaydebrazza_livreur', JSON.stringify(livreur))
       navigate('/livreur/dashboard')
     } catch {
       setErreur('Erreur de connexion, réessaie')
@@ -49,7 +49,7 @@ export default function LivreurLogin() {
           <div className="w-16 h-16 bg-jaune rounded-2xl flex items-center justify-center font-black text-noir text-2xl mx-auto mb-4">
             B
           </div>
-          <h1 className="text-2xl font-black text-white">Big Man</h1>
+          <h1 className="text-2xl font-black text-white">Takeaway De Brazza</h1>
           <p className="text-gray-400 text-sm mt-1">Espace livreur</p>
         </div>
 

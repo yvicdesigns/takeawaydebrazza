@@ -164,7 +164,7 @@ export default function ManageOrders() {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `commandes_bigman_${new Date().toISOString().slice(0,10)}.csv`
+    a.download = `commandes_takeawaydebrazza_${new Date().toISOString().slice(0,10)}.csv`
     a.click()
     URL.revokeObjectURL(url)
   }
@@ -178,7 +178,7 @@ export default function ManageOrders() {
       <style>body{font-family:monospace;font-size:13px;width:300px;margin:0 auto;padding:10px}
       h2{text-align:center;font-size:16px}hr{border:1px dashed #000}.total{font-size:16px;font-weight:bold}</style></head>
       <body>
-        <h2>🍔 BIG MAN FAST FOOD</h2>
+        <h2>🍔 TAKEAWAY DE BRAZZA FAST FOOD</h2>
         <hr/>
         <p>Commande #${String(commande.id).slice(-8).toUpperCase()}</p>
         <p>Client: ${commande.nom_client}</p>

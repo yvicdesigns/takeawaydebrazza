@@ -17,8 +17,8 @@ const ONGLETS = [
 ]
 
 // ---- Clés localStorage (admin) ----
-const CLE_CONVS_CACHEES = 'bigman_admin_convs_cachees'
-const CLE_MSGS_CACHES   = 'bigman_admin_msgs_caches'
+const CLE_CONVS_CACHEES = 'takeawaydebrazza_admin_convs_cachees'
+const CLE_MSGS_CACHES   = 'takeawaydebrazza_admin_msgs_caches'
 
 function chargerCaches(cle) {
   return new Set(JSON.parse(localStorage.getItem(cle) || '[]'))

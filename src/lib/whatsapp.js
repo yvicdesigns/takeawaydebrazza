@@ -10,7 +10,7 @@ const NUMERO_RESTAURANT = import.meta.env.VITE_WHATSAPP_NUMERO || '242XXXXXXXXX'
 export function genererMessageWhatsApp(panier, infosClient, modeLivraison, total) {
   // Crée la liste des produits commandés
   const lignesProduits = panier.map((item) => {
-    // Format : "• 2x Big Man Burger — 3 000 FCFA"
+    // Format : "• 2x Takeaway De Brazza Burger — 3 000 FCFA"
     return `• ${item.quantite}x ${item.nom} — ${formaterPrix(item.prix * item.quantite)} FCFA`
   })
 
@@ -18,7 +18,7 @@ export function genererMessageWhatsApp(panier, infosClient, modeLivraison, total
 
   // Construit le message complet
   const lignes = [
-    '🍔 *NOUVELLE COMMANDE — BIG MAN*',
+    '🍔 *NOUVELLE COMMANDE — TAKEAWAY DE BRAZZA*',
     '━━━━━━━━━━━━━━━━━━━━━━',
     '',
     '*Produits commandés :*',
@@ -42,7 +42,7 @@ export function genererMessageWhatsApp(panier, infosClient, modeLivraison, total
     // Ajoute les notes seulement si présentes
     infosClient.notes ? `📝 Notes : ${infosClient.notes}` : null,
     '',
-    '_Commande passée via l\'app Big Man_',
+    '_Commande passée via l\'app Takeaway De Brazza_',
   ]
 
   return lignes.filter(ligne => ligne !== null).join('\n')

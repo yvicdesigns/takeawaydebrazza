@@ -223,7 +223,7 @@ const SECTIONS = [
           'Définir une commande minimum et une date d\'expiration (optionnels).',
           'Activer / désactiver un code sans le supprimer.',
           'Supprimer un code avec l\'icône 🗑.',
-          'Les codes sont insensibles à la casse (BIGMAN10 = bigman10).',
+          'Les codes sont insensibles à la casse (TAKEAWAYDEBRAZZA10 = takeawaydebrazza10).',
         ],
       },
     ],
@@ -369,7 +369,7 @@ export default function ManageGuide() {
       <div>
         <h1 className="text-2xl font-black text-white">Guide d'utilisation</h1>
         <p className="text-gray-400 text-sm mt-1">
-          Documentation complète de l'application BIG MAN
+          Documentation complète de l'application TAKEAWAY DE BRAZZA
         </p>
       </div>
 
@@ -429,7 +429,7 @@ export default function ManageGuide() {
       {/* Footer */}
       <div className="bg-[#1a1a1a] border border-gray-800 rounded-2xl p-5 text-center">
         <p className="text-gray-500 text-xs">
-          BIG MAN App · Stack : React 18 + Vite + Tailwind CSS + Supabase
+          TAKEAWAY DE BRAZZA App · Stack : React 18 + Vite + Tailwind CSS + Supabase
         </p>
         <p className="text-gray-600 text-xs mt-1">
           Pour toute question technique, consulter le fichier README ou les commentaires dans le code source.

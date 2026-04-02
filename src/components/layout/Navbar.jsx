@@ -11,7 +11,7 @@ export default function Navbar() {
   const location = useLocation()
   const { nombreArticles } = useCart()
   const { isLight, basculerTheme } = useTheme()
-  const estAdmin = sessionStorage.getItem('bigman_admin') === 'true'
+  const estAdmin = sessionStorage.getItem('takeawaydebrazza_admin') === 'true'
 
   // On n'affiche pas la navbar sur les pages admin
   if (location.pathname.startsWith('/admin')) return null
@@ -20,7 +20,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-40 bg-noir/95 backdrop-blur-sm border-b border-gray-800">
       <div className="max-w-md mx-auto px-4 h-16 flex items-center justify-between">
 
-        {/* Logo Big Man */}
+        {/* Logo Takeaway De Brazza */}
         <Link to="/" className="flex items-center gap-2 no-tap-highlight">
           <div className="w-9 h-9 bg-jaune rounded-xl flex items-center justify-center font-black text-noir text-lg">
             B

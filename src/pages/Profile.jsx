@@ -41,7 +41,7 @@ function ChampMotDePasse({ value, onChange, placeholder, className = '' }) {
 const STATUTS_ACTIFS   = ['en_attente', 'en_preparation', 'en_livraison']
 const STATUTS_TERMINES = ['livre', 'envoyee_whatsapp']
 const SEUIL_FIDELITE   = 10
-const CLE_ADRESSE      = 'bigman_adresse_favorite'
+const CLE_ADRESSE      = 'takeawaydebrazza_adresse_favorite'
 
 const COULEURS_STATUT = {
   en_attente:       'text-yellow-400 bg-yellow-400/10',
@@ -281,7 +281,7 @@ export default function Profile() {
   }
 
   function partagerApp() {
-    const texte = `🍔 *Big Man Fast Food — Brazzaville*\nLes meilleurs burgers de la ville ! ${window.location.origin}`
+    const texte = `🍔 *Takeaway De Brazza Fast Food — Brazzaville*\nLes meilleurs burgers de la ville ! ${window.location.origin}`
     window.open(`https://wa.me/?text=${encodeURIComponent(texte)}`, '_blank')
   }
 
@@ -375,7 +375,7 @@ export default function Profile() {
           {/* Logo / titre */}
           <div className="text-center mb-8 pt-4">
             <div className="w-16 h-16 bg-jaune rounded-2xl flex items-center justify-center font-black text-noir text-3xl mx-auto mb-4">B</div>
-            <h1 className="text-2xl font-black text-white">Big Man</h1>
+            <h1 className="text-2xl font-black text-white">Takeaway De Brazza</h1>
             <p className="text-gray-500 text-sm mt-1">Connectez-vous ou créez un compte</p>
           </div>
 
@@ -840,7 +840,7 @@ export default function Profile() {
           className="w-full flex items-center gap-3 bg-noir-clair rounded-2xl p-4 hover:bg-gray-800 transition-colors">
           <div className="w-10 h-10 bg-green-500/20 rounded-xl flex items-center justify-center text-green-400 text-lg flex-shrink-0">📤</div>
           <div className="flex-1 text-left">
-            <p className="text-white font-bold text-sm">Partager Big Man</p>
+            <p className="text-white font-bold text-sm">Partager Takeaway De Brazza</p>
             <p className="text-gray-400 text-xs">Invite tes amis à commander</p>
           </div>
           <span className="text-gray-500">›</span>

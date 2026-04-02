@@ -18,7 +18,7 @@ export default function LivreurDashboard() {
 
   // Récupère la session livreur
   useEffect(() => {
-    const session = sessionStorage.getItem('bigman_livreur')
+    const session = sessionStorage.getItem('takeawaydebrazza_livreur')
     if (!session) {
       navigate('/livreur')
       return
@@ -49,7 +49,7 @@ export default function LivreurDashboard() {
   }
 
   function seDeconnecter() {
-    sessionStorage.removeItem('bigman_livreur')
+    sessionStorage.removeItem('takeawaydebrazza_livreur')
     navigate('/livreur')
   }
 

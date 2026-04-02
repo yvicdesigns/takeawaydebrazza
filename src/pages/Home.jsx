@@ -32,7 +32,7 @@ export default function Home() {
         <div className="absolute inset-0">
           <img
             src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=800"
-            alt="Big Man Fast Food"
+            alt="Takeaway De Brazza Fast Food"
             className="w-full h-full object-cover"
             loading="eager" // Charge immédiatement car visible au démarrage
           />

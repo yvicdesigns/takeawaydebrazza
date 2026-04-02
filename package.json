@@ -1,7 +1,7 @@
 {
-  "name": "bigman-app",
+  "name": "takeawaydebrazza-app",
   "version": "1.0.0",
-  "description": "Application web et mobile pour Big Man Fast-Food, Brazzaville",
+  "description": "Application web et mobile pour Takeaway De Brazza Fast-Food, Brazzaville",
   "type": "module",
   "scripts": {
     "dev": "vite",

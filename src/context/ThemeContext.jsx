@@ -20,11 +20,11 @@ const ThemeContext = createContext(null)
 export function ThemeProvider({ children }) {
   // Au chargement : lire la préférence manuelle ou auto-détecter
   const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('bigman_theme') || detecterThemeAuto()
+    return localStorage.getItem('takeawaydebrazza_theme') || detecterThemeAuto()
   })
   // Indique si l'utilisateur a overridé manuellement
   const [modeAuto, setModeAuto] = useState(
-    !localStorage.getItem('bigman_theme')
+    !localStorage.getItem('takeawaydebrazza_theme')
   )
 
   // Appliquer la classe sur <html> à chaque changement de thème
@@ -33,7 +33,7 @@ export function ThemeProvider({ children }) {
     html.classList.remove('light', 'dark')
     html.classList.add(theme)
     if (!modeAuto) {
-      localStorage.setItem('bigman_theme', theme)
+      localStorage.setItem('takeawaydebrazza_theme', theme)
     }
   }, [theme, modeAuto])
 
@@ -51,11 +51,11 @@ export function ThemeProvider({ children }) {
     const next = theme === 'dark' ? 'light' : 'dark'
     setTheme(next)
     setModeAuto(false)
-    localStorage.setItem('bigman_theme', next)
+    localStorage.setItem('takeawaydebrazza_theme', next)
   }
 
   function reinitialiserAuto() {
-    localStorage.removeItem('bigman_theme')
+    localStorage.removeItem('takeawaydebrazza_theme')
     setModeAuto(true)
     setTheme(detecterThemeAuto())
   }

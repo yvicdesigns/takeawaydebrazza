@@ -11,7 +11,7 @@ import { supabase } from '../lib/supabase'
 const PRODUITS_DEMO = [
   {
     id: 1,
-    nom: 'Big Man Classic',
+    nom: 'Takeaway De Brazza Classic',
     description: 'Notre burger signature : steak haché, cheddar fondu, salade, tomate, oignons caramélisés et sauce maison',
     prix: 3500,
     categorie: 'burgers',
@@ -23,7 +23,7 @@ const PRODUITS_DEMO = [
   },
   {
     id: 2,
-    nom: 'Big Man Crispy',
+    nom: 'Takeaway De Brazza Crispy',
     description: 'Poulet croustillant, sauce piquante maison, coleslaw frais et cornichons',
     prix: 3000,
     categorie: 'burgers',
@@ -35,8 +35,8 @@ const PRODUITS_DEMO = [
   },
   {
     id: 3,
-    nom: 'Menu Big Man',
-    description: 'Big Man Classic + frites croustillantes + boisson au choix',
+    nom: 'Menu Takeaway De Brazza',
+    description: 'Takeaway De Brazza Classic + frites croustillantes + boisson au choix',
     prix: 5500,
     categorie: 'menus',
     image_url: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=400',
@@ -48,7 +48,7 @@ const PRODUITS_DEMO = [
   {
     id: 4,
     nom: 'Menu Crispy',
-    description: 'Big Man Crispy + frites + boisson au choix',
+    description: 'Takeaway De Brazza Crispy + frites + boisson au choix',
     prix: 5000,
     categorie: 'menus',
     image_url: 'https://images.unsplash.com/photo-1586816001966-79b736744398?w=400',

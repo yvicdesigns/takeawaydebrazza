@@ -66,12 +66,12 @@ export default function AdminLayout() {
   }, [location.pathname])
 
   useEffect(() => {
-    const estAdmin = sessionStorage.getItem('bigman_admin')
+    const estAdmin = sessionStorage.getItem('takeawaydebrazza_admin')
     if (!estAdmin) navigate('/admin')
   }, [])
 
   function seDeconnecter() {
-    sessionStorage.removeItem('bigman_admin')
+    sessionStorage.removeItem('takeawaydebrazza_admin')
     navigate('/admin')
   }
 
@@ -115,7 +115,7 @@ export default function AdminLayout() {
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 bg-jaune rounded-xl flex items-center justify-center font-black text-noir">B</div>
             <div>
-              <p className="font-black text-white text-sm">BIG MAN</p>
+              <p className="font-black text-white text-sm">TAKEAWAY DE BRAZZA</p>
               <p className="text-gray-500 text-xs">Administration</p>
             </div>
           </div>

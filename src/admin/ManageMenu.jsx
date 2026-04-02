@@ -37,7 +37,7 @@ export default function ManageMenu() {
 
   // Catégories dynamiques : défaut + celles trouvées dans les produits
   const [categories, setCategories] = useState(() => {
-    const sauvegardees = localStorage.getItem('bigman_categories')
+    const sauvegardees = localStorage.getItem('takeawaydebrazza_categories')
     return sauvegardees ? JSON.parse(sauvegardees) : CATEGORIES_PAR_DEFAUT
   })
   const [nouvelleCategorie, setNouvelleCategorie] = useState('')
@@ -54,7 +54,7 @@ export default function ManageMenu() {
     listeProduits.forEach(p => { if (p.categorie) cats.add(p.categorie) })
     const nouvelles = [...cats].sort()
     setCategories(nouvelles)
-    localStorage.setItem('bigman_categories', JSON.stringify(nouvelles))
+    localStorage.setItem('takeawaydebrazza_categories', JSON.stringify(nouvelles))
   }
 
   async function chargerProduits() {
@@ -71,8 +71,8 @@ export default function ManageMenu() {
       synchroniserCategories(liste)
     } catch {
       const demo = [
-        { id: 1, nom: 'Big Man Classic', prix: 3500, categorie: 'burgers', actif: true, populaire: true, image_url: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=80' },
-        { id: 2, nom: 'Menu Big Man',    prix: 5500, categorie: 'menus',   actif: true, populaire: true, image_url: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=80' },
+        { id: 1, nom: 'Takeaway De Brazza Classic', prix: 3500, categorie: 'burgers', actif: true, populaire: true, image_url: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=80' },
+        { id: 2, nom: 'Menu Takeaway De Brazza',    prix: 5500, categorie: 'menus',   actif: true, populaire: true, image_url: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=80' },
       ]
       setProduits(demo)
     } finally {
@@ -134,7 +134,7 @@ export default function ManageMenu() {
     }
     const mises_a_jour = [...categories, cat].sort()
     setCategories(mises_a_jour)
-    localStorage.setItem('bigman_categories', JSON.stringify(mises_a_jour))
+    localStorage.setItem('takeawaydebrazza_categories', JSON.stringify(mises_a_jour))
     setNouvelleCategorie('')
   }
 
@@ -146,7 +146,7 @@ export default function ManageMenu() {
     }
     const mises_a_jour = categories.filter(c => c !== cat)
     setCategories(mises_a_jour)
-    localStorage.setItem('bigman_categories', JSON.stringify(mises_a_jour))
+    localStorage.setItem('takeawaydebrazza_categories', JSON.stringify(mises_a_jour))
   }
 
   // ---- Formulaire produit ----

@@ -42,7 +42,7 @@ export default function ManageParametres() {
   const [reinitEnCours, setReinitEnCours] = useState(false)
 
   // ---- Infos restaurant ----
-  const [nomResto,     setNomResto]     = useState('BIG MAN')
+  const [nomResto,     setNomResto]     = useState('TAKEAWAY DE BRAZZA')
   const [descResto,    setDescResto]    = useState('')
   const [adresseResto, setAdresseResto] = useState('')
   const [logoUrl,      setLogoUrl]      = useState('')
@@ -224,11 +224,11 @@ export default function ManageParametres() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Champ label="Nom du restaurant">
             <input type="text" value={nomResto} onChange={e => setNomResto(e.target.value)}
-              placeholder="BIG MAN" className="input-field" />
+              placeholder="TAKEAWAY DE BRAZZA" className="input-field" />
           </Champ>
           <Champ label="Email">
             <input type="email" value={email} onChange={e => setEmail(e.target.value)}
-              placeholder="contact@bigman.cg" className="input-field" />
+              placeholder="contact@takeawaydebrazza.cg" className="input-field" />
           </Champ>
         </div>
 
@@ -440,7 +440,7 @@ export default function ManageParametres() {
                   type="text"
                   value={nvCode.code}
                   onChange={e => setNvCode(p => ({ ...p, code: e.target.value.toUpperCase() }))}
-                  placeholder="BIGMAN10"
+                  placeholder="TAKEAWAYDEBRAZZA10"
                   className="input-field uppercase"
                 />
               </div>

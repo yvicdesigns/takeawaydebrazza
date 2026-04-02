@@ -11,7 +11,7 @@ const LABELS_PAIEMENT = {
   cash: '💵 Cash à la livraison',
   mtn_momo: '📱 MTN MoMo',
   airtel_money: '📲 Airtel Money',
-  solde: '💰 Solde Big Man',
+  solde: '💰 Solde Takeaway De Brazza',
 }
 
 export default function OrderConfirmation() {

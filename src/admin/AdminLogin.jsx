@@ -21,19 +21,19 @@ export default function AdminLogin() {
     try {
       // Vérifie d'abord si un mot de passe personnalisé a été défini dans la DB
       const mdpOverride = await getParametre('admin_password_override')
-      const mdpRef = mdpOverride || import.meta.env.VITE_ADMIN_PASSWORD || 'bigman2024'
+      const mdpRef = mdpOverride || import.meta.env.VITE_ADMIN_PASSWORD || 'takeawaydebrazza2024'
 
       if (motDePasse === mdpRef) {
-        sessionStorage.setItem('bigman_admin', 'true')
+        sessionStorage.setItem('takeawaydebrazza_admin', 'true')
         navigate('/admin/dashboard')
       } else {
         setErreur('Mot de passe incorrect')
       }
     } catch {
       // Fallback si Supabase indisponible
-      const mdpRef = import.meta.env.VITE_ADMIN_PASSWORD || 'bigman2024'
+      const mdpRef = import.meta.env.VITE_ADMIN_PASSWORD || 'takeawaydebrazza2024'
       if (motDePasse === mdpRef) {
-        sessionStorage.setItem('bigman_admin', 'true')
+        sessionStorage.setItem('takeawaydebrazza_admin', 'true')
         navigate('/admin/dashboard')
       } else {
         setErreur('Mot de passe incorrect')

@@ -14,9 +14,9 @@ import {
 } from '../lib/supabase'
 
 // ---- Clés localStorage ----
-const CLE_MSGS    = 'bigman_msgs_caches'
-const CLE_NOTIFS  = 'bigman_notifs_cachees'
-const CLE_VUES    = 'bigman_notifs_vues'
+const CLE_MSGS    = 'takeawaydebrazza_msgs_caches'
+const CLE_NOTIFS  = 'takeawaydebrazza_notifs_cachees'
+const CLE_VUES    = 'takeawaydebrazza_notifs_vues'
 const TRENTE_JOURS = 30 * 24 * 60 * 60 * 1000
 
 // Charge les IDs cachés et nettoie automatiquement ceux > 30 jours
@@ -44,7 +44,7 @@ function marquerVue(id) {
   vues.add(id)
   localStorage.setItem(CLE_VUES, JSON.stringify([...vues]))
   // Déclenche un event pour que BottomNav mette à jour son badge
-  window.dispatchEvent(new Event('bigman_notifs_vues_changed'))
+  window.dispatchEvent(new Event('takeawaydebrazza_notifs_vues_changed'))
 }
 
 export default function MessagesPage() {

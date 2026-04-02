@@ -15,7 +15,7 @@ import { formaterPrix } from '../lib/whatsapp'
 import { getInfosRestaurant } from '../lib/supabase'
 
 function getFavorisIds() {
-  try { return JSON.parse(localStorage.getItem('bigman_favoris') || '[]') } catch { return [] }
+  try { return JSON.parse(localStorage.getItem('takeawaydebrazza_favoris') || '[]') } catch { return [] }
 }
 
 export default function Menu() {
@@ -38,8 +38,8 @@ export default function Menu() {
   useEffect(() => {
     getInfosRestaurant().then(setInfosResto).catch(() => {})
     const handler = () => setFavorisIds(getFavorisIds())
-    window.addEventListener('bigman_favoris_change', handler)
-    return () => window.removeEventListener('bigman_favoris_change', handler)
+    window.addEventListener('takeawaydebrazza_favoris_change', handler)
+    return () => window.removeEventListener('takeawaydebrazza_favoris_change', handler)
   }, [])
 
   const produitsFiltres = produits.filter(p => {
