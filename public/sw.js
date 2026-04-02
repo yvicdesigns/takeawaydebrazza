@@ -1,9 +1,9 @@
 // ============================================================
-// SERVICE WORKER — Big Man Fast Food
+// SERVICE WORKER — Takeaway De Brazza
 // Cache statique + stratégie network-first pour l'API
 // ============================================================
 
-const CACHE_NAME = 'bigman-v1'
+const CACHE_NAME = 'takeawaydebrazza-v1'
 
 const STATIC_ASSETS = [
   '/',

@@ -3,10 +3,10 @@ import { CapacitorConfig } from '@capacitor/cli'
 
 const config: CapacitorConfig = {
   // Identifiant unique de l'app sur les stores (format : com.NomEntreprise.NomApp)
-  appId: 'com.bigman.brazzaville',
+  appId: 'com.takeawaydebrazza.app',
 
   // Nom affiché sur l'écran d'accueil du téléphone
-  appName: 'Big Man',
+  appName: 'Takeaway De Brazza',
 
   // Dossier contenant le build de l'app (généré par "npm run build")
   webDir: 'dist',
@@ -29,7 +29,7 @@ const config: CapacitorConfig = {
     // Barre de statut — couleur de la barre en haut du téléphone
     StatusBar: {
       style: 'dark',
-      backgroundColor: '#E63946', // Rouge Big Man
+      backgroundColor: '#E63946', // Rouge Takeaway De Brazza
     },
 
     // Écran de démarrage (splash screen)

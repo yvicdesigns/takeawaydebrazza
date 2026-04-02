@@ -1,5 +1,5 @@
 /* ============================================================
-   STYLES GLOBAUX — Big Man App
+   STYLES GLOBAUX — Takeaway De Brazza App
    Ce fichier charge Tailwind et définit les styles de base
    ============================================================ */
 
@@ -197,7 +197,7 @@ html.dark .animate-pulse {
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* Gradient jaune Big Man — couleur dominante du logo */
+  /* Gradient jaune Takeaway De Brazza — couleur dominante du logo */
   .gradient-rouge {
     background: linear-gradient(135deg, #FFCC00 0%, #E6B800 100%);
   }

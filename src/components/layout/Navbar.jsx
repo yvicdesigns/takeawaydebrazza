@@ -23,10 +23,10 @@ export default function Navbar() {
         {/* Logo Takeaway De Brazza */}
         <Link to="/" className="flex items-center gap-2 no-tap-highlight">
           <div className="w-9 h-9 bg-jaune rounded-xl flex items-center justify-center font-black text-noir text-lg">
-            B
+            T
           </div>
           <span className="font-black text-xl tracking-tight">
-            BIG <span className="text-jaune">MAN</span>
+            TAKEAWAY <span className="text-jaune">DE BRAZZA</span>
           </span>
         </Link>
 
